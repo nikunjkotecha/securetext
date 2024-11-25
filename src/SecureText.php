@@ -20,7 +20,7 @@ class SecureText {
    */
   public static function encrypt($str, $key) {
     $str = self::pkcs5Pad($str);
-    $iv = md5(substr($key, 0, 16));
+    $iv = substr(md5($key), 0, 16);
     $encrypted = openssl_encrypt($str, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
     $encrypted = base64_decode($encrypted);
     $encrypted = unpack('C*', ($encrypted));
@@ -73,7 +73,7 @@ class SecureText {
   public static function decrypt($code, $key) {
     $code = self::hex2ByteArray(trim($code));
     $code = self::byteArray2String($code);
-    $iv = md5(substr($key, 0, 16));
+    $iv = substr(md5($key), 0, 16);
     $code = base64_encode($code);
     $decrypted = openssl_decrypt($code, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
     return self::pkcs5Unpad($decrypted);
